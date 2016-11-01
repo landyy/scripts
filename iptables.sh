@@ -44,7 +44,7 @@ iptables -A OUTPUT -o lo -j ACCEPT
 iptables -A OUTPUT -p tcp --dport 53 -j ACCEPT
 
 #allow already established connections to have output 
-iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+#iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 iptables -A OUTPUT -j DROP
 iptables -A INPUT -j DROP
