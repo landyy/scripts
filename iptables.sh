@@ -1,5 +1,6 @@
 #!/bin/bash
 #Author: Russell Babarsky
+#Thanks to Micah and Brad
 
 
 #reset
