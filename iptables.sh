@@ -1,4 +1,6 @@
 #!/bin/bash
+#Author: Russell Babarsky
+
 
 #reset
 iptables -F
