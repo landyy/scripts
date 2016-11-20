@@ -4,48 +4,57 @@
 
 
 #reset
+iptables -t mangle -F
 iptables -F
 
 #Flushes chains
+iptables -t mangle -X 
 iptables -X
 
-iptables -P OUTPUT ACCEPT
-iptables -P INPUT ACCEPT
-iptables -P FORWARD DROP
+iptables -t mangle -P OUTPUT ACCEPT
+iptables -t mangle -P INPUT ACCEPT
+iptables -t mangle -P FORWARD DROP
 
-#allows ssh
-#iptables -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+#special case for ssh
+iptables -t mangle -A INPUT -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -t mangle -A OUTPUT -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
 
-#allows http
-#iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+#special case for icmp; Can ping out but can't be pinged
+iptables -t mangle -A INPUT -p icmp --icmp-type 0 -j ACCEPT
+iptables -t mangle -A OUTPUT -p icmp --icmp-type 8 -j ACCEPT
 
-#allows https
-#iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT 
+#output rules
+rules_output(){
+	output=(80 443)
+	
+	for j in ${output[@]} ; do
+		iptables -t mangle -A OUTPUT -p tcp --sport $j -j ACCEPT
+	done
+}
 
-
-
-rules(){
-	list=(22 80 443)
+#input rules
+rules_input(){
+	list=(80 443)
 
 	for i in ${list[@]} ; do
-		iptables -A INPUT -p tcp --dport $i -j ACCEPT
+		iptables -t mangle -A INPUT -p tcp --dport $i -j ACCEPT
 	done	
 }
 
-rules
+rules_input
+rules_output
 
 #allow already established connections to have input
-iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -t mangle -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 #loopback
-iptables -A INPUT -i lo -j ACCEPT
-iptables -A OUTPUT -o lo -j ACCEPT
+iptables -t mangle -A INPUT -i lo -j ACCEPT
+iptables -t mangle -A OUTPUT -o lo -j ACCEPT
 
-#DNS
-#iptables -A OUTPUT -p tcp --dport 53 -j ACCEPT
+iptables -t mangle -A OUTPUT -j DROP
+iptables -t mangle -A INPUT -j DROP
 
-#allow already established connections to have output 
-#iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-
-iptables -A OUTPUT -j DROP
-iptables -A INPUT -j DROP
+#For testing purposes
+#sleep 10
+#iptables -F
+#iptables -F -t mangle
