@@ -36,9 +36,9 @@ Show where something is being run from
 ls -al
 #should be a sys link to the file
 ```
-Reset password in one line (helpful at the start)
+Change password for a user(a must!)
 ```
-echo "user:password" | chpasswd
+passwd
 ```
 Make files immutable (IMPORTANT: ./harden.sh changes name of chattr)
 ```
@@ -53,10 +53,11 @@ chmod [u+rwx],[g+rwx],[0+rwx] file
 chmod [700] file        #numbers have a special meaning
 ```
 
+
 ### Crontab
 View cronjobs YOU currently have active
 ```
-crontab -v
+crontab -e
 ```
 View all cronjobs by all users (must be root)
 ```
@@ -94,4 +95,9 @@ echo os.system('/bin/bash')
 /var/log/                   #Linux system logs
 /etc/fstab                  #file system mounts
 /var/log/apache2/access.log
+```
+
+Worth checking binary files and making sure they are still binary
+```
+file [binary]
 ```
