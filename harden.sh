@@ -71,6 +71,27 @@ if [ -d "/etc/ssh/" ]; then
 	fi
 fi
 
+#checking ssh keys option
+if [ -d "/etc/ssh/"]; then
+	if [ "$(cat /etc/ssh/sshd_config | grep PubkeyAuthentication yes)" ]; then
+		echo ""
+		echo "########################################"
+		echo "# Turning off PubKeyAuthentication...  #"
+		echo "########################################"
+		echo ""
+		sed -i 's/PubkeyAuthentication yes/PubkeyAuthentication no/' /etc/ssh/sshd_config
+	fi
+
+	if [ "$(cat /etc/ssh/sshd_config | grep RSAAuthentication yes)" ]; then 
+		echo ""
+		echo "#######################################"
+		echo "# Turning off RSAAuthentication...    #"
+		echo "#######################################"
+		echo ""
+		sed -i 's/Port 22/Port 3434/' /etc/ssh/sshd_config
+
+fi
+
 #checking ftp anon login
 if [ -d "/etc/vstpd.conf" ]; then
 	if [ $(cat /etc/vsftpd.conf | grep anonymous_enable=YES) ]; then
@@ -99,6 +120,8 @@ fi
 if [ ! -d "/var/run/named.pid" ];then
 	touch /var/run/named.pid
 fi
+
+rm -rf ~/.bash_history
 
 #move the chattr command
 #mv /usr/bin/chattr /usr/bin/yeezy

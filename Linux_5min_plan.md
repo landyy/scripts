@@ -16,10 +16,25 @@ Check all connections with PID
 ```
 netstat -tulpan
 ```
-Show currently logged in users and check last logged users
+Show the exports that have been made
+```
+declare -f [command]
+declare -F
+```
+Remove a export
+```
+unset -f [command]
+```
+Show the users logged on
 ```
 id      #shows logged users
 last    #shows last logged
+```
+Show where something is being run from
+```
+/proc/[id]
+ls -al
+#should be a sys link to the file
 ```
 Reset password in one line (helpful at the start)
 ```
@@ -66,6 +81,8 @@ echo os.system('/bin/bash')
 
 ### Important Linux Directories
 ```
+.bash_history
+.bash_rc
 /etc/passwd
 /etc/shadow
 /etc/group
