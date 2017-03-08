@@ -7,7 +7,7 @@
 badbin=()
 
 for filename in /bin/* ; do
-	if [ $(/usr/bin/file -b $filename | awk -F' ' '{print $1}') == "ASCII" ]; then
+	if [ "$(/usr/bin/file $filename | grep ASCII)" ]; then
 		badbin+=($filename)
 	fi
 done
