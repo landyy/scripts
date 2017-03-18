@@ -4,11 +4,13 @@ gitmyshit(){
 	if [ $? -eq 0 ]; then
 		cd scripts
 		
+		touch errors.txt
+		
 		echo ""
 		echo "Running iptables scripts"
 		echo ""	
 		if [ -f "iptablesnew.sh"]; then
-			#TODO
+			./iptablesnew.sh > errors.txt 2>&1
 		fi
 		
 		echo ""
@@ -16,7 +18,7 @@ gitmyshit(){
 		echo ""
 
 		if [ -f "harden.sh"]; then
-			#TODO
+			./harden.sh > errors.txt 2>&1
 		fi
 
 	else
@@ -37,7 +39,7 @@ getdeps(){
 		elif [ -d "/etc/yum" ]; then
 			yum install sshpass
 		else
-			echo "Can't find appropriate package manager for except, exiting...\n"
+			echo "Can't find appropriate package manager for except, exiting..."
 			exit 1 #gay
 		fi
 	fi
@@ -48,32 +50,35 @@ getdeps(){
 	fi
 }
 
-if [ ! -f /usr/bin/sshpass ]; then
-	echo "expect is needed for this script, installing\n"
-	
-	if [ -d "/etc/apt/" ]; then
-		apt-get install sshpass
-	elif [ -d "/etc/pacman/"]; then
-		pacman -S sshpass
-	elif [ -d "/etc/yum" ]; then
-		yum install sshpass
-	else
-		echo "Can't find appropriate package manager for except, exiting...\n"
-		exit 1 #gay
-	fi
-fi		
+for ip in $(cat hosts.txt); do
+    echo "Please enter a password for " $ip "\n"
+    read pass
+    echo ""
 
-if [ ! -f $PWD/hosts.txt ]; then
-	echo $PWD/hosts.txt
-	echo "Please create hosts.txt so where we know where to deploy"
-	exit 1
-else
-	for ip in $(cat hosts.txt); do
-		echo "Please enter a password for " $ip "\n"
-		read pass
+    echo "Please enter a new password for " $ip "\n"
+    read pass2
+    echo ""
+    echo "Write that shit down!"
+    echo ""
 
-		sshpass -p $pass ssh -o StrictHostKeyChecking=no itsec@$ip
+    #echo "Please enter the ports that you want to allow for this box"
+    #TODO
+    
+    sshpass -p $pass ssh -o StrictHostKeyChecking=no itsec@$ip
+    
+    echo ""
+    echo "Changing Passwords now..."
+    echo ""
+    echo root:$pass2 | chpasswd
+    
+    echo ""
+    echo "Grabbing scripts"
+    echo ""
+    
+    gitmyshit()
 
-		
-	done
-fi
+    echo ""
+    echo "Look For Errors in errors.txt! Done."
+    echo ""
+
+done
