@@ -1,5 +1,27 @@
 #!/bin/bash
 
+saveconfig(){
+    dir="~/Documents/.configs/"
+    if [ -d "~/Documents/"]; then
+	mkdir Documents
+    fi
+    mkdir $dir
+
+    echo ""
+    echo "Saving files for backup..."
+    echo ""
+    
+    configs=(/etc/ssh/sshd_config /etc/vsftpd.conf /etc/passwd /etc/shadow)
+    
+    #loops through all the specified arrays and copies them into the 'secret' directory
+    for file in "${configs}"; do
+	if [ -f $file ]; then
+	    cp $file $dir
+	fi
+    done
+    
+}
+
 clear
 
 echo "Starting harden.sh..."
@@ -45,7 +67,9 @@ if [ -d "/var/www/" ]; then
 		chmod 755 /var/www/
 		chmod 644 /var/www/html
 	fi
-
+	
+	#this logic is pretty gay but whatevs
+	#basically just want to make sure that both dirs are safe
 	if [ $(stat -c "%a" /var/www/html) != 644 ]; then
  	
 		echo ""
@@ -68,11 +92,8 @@ if [ -d "/etc/ssh/" ]; then
 		echo "#######################################"
 		echo ""
 		sed -i 's/Port 22/Port 3434/' /etc/ssh/sshd_config
-	fi
-fi
 
-#checking ssh keys option
-if [ -d "/etc/ssh/"]; then
+	#checking ssh keys option
 	if [ "$(cat /etc/ssh/sshd_config | grep PubkeyAuthentication yes)" ]; then
 		echo ""
 		echo "########################################"
@@ -89,11 +110,12 @@ if [ -d "/etc/ssh/"]; then
 		echo "#######################################"
 		echo ""
 		sed -i 's/Port 22/Port 3434/' /etc/ssh/sshd_config
+	fi
 
 fi
 
 #checking ftp anon login
-if [ -d "/etc/vstpd.conf" ]; then
+if [ -f "/etc/vstpd.conf" ]; then
 	if [ $(cat /etc/vsftpd.conf | grep anonymous_enable=YES) ]; then
 		echo ""
 		echo "#######################################"
@@ -117,9 +139,11 @@ else
 fi
 
 #check for named.pid
-if [ ! -d "/var/run/named.pid" ];then
+if [ ! -f "/var/run/named.pid" ];then
 	touch /var/run/named.pid
 fi
+
+#this may break something idk
 
 rm -rf ~/.bash_history
 
@@ -135,6 +159,8 @@ rm -rf ~/.bash_history
 #yeezy +i /etc/passwd
 #yeezy +i /etc/shadow
 #yeezy +i /etc/ssh/sshd_config
+
+echo "Done!"
 
 
 
