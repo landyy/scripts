@@ -11,6 +11,10 @@ gitmyshit(){
 		echo ""	
 		if [ -f "iptablesnew.sh"]; then
 			./iptablesnew.sh > errors.txt 2>&1
+		else
+		    echo ""
+		    echo "!!! WARNING: iptablesnew.sh was not run !!!"
+		    echo ""
 		fi
 		
 		echo ""
@@ -19,19 +23,26 @@ gitmyshit(){
 
 		if [ -f "harden.sh"]; then
 			./harden.sh > errors.txt 2>&1
+		else
+		    echo ""
+		    echo "!!! WARNING: harden.sh was not run !!!"
+		    echo ""
 		fi
 
 	else
-	
-		echo "Error cloning. Maybe this box is already pwned :-("
+		echo ""
+		echo "Error cloning. Maybe this box is already pwned :-( Exiting..."
+		exit 1
 
 	fi
 }
 
 getdeps(){
 	if [ ! -f /usr/bin/sshpass ]; then
-		echo "expect is needed for this script, installing\n"
-	
+		echo ""
+		echo "sshpass is needed for this script, installing\n"
+		echo ""
+
 		if [ -d "/etc/apt/" ]; then
 			apt-get install sshpass
 		elif [ -d "/etc/pacman/"]; then
@@ -39,23 +50,32 @@ getdeps(){
 		elif [ -d "/etc/yum" ]; then
 			yum install sshpass
 		else
-			echo "Can't find appropriate package manager for except, exiting..."
+			echo "Can't find appropriate package manager for except, Exiting..."
 			exit 1 #gay
 		fi
 	fi
 		
 	if [ ! -f $PWD/hosts.txt ]; then
+		echo ""
 		echo "Please create hosts.txt so where we know where to deploy"
+		echo ""
 		exit 1
 	fi
 }
 
+clear
+echo ""
+echo "Getting ready to deploy scripts..."
+
+getdeps()
+
 for ip in $(cat hosts.txt); do
+
     echo "Please enter a password for " $ip "\n"
     read pass
     echo ""
 
-    echo "Please enter a new password for " $ip "\n"
+    echo "Please enter a NEW password for " $ip "\n"
     read pass2
     echo ""
     echo "Write that shit down!"
