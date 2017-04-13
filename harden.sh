@@ -11,7 +11,7 @@ saveconfig(){
     echo "Saving files for backup..."
     echo ""
     
-    configs=(/etc/ssh/sshd_config /etc/vsftpd.conf /etc/passwd /etc/shadow)
+    configs=(/etc/ssh/sshd_config /etc/vsftpd.conf /etc/passwd /etc/shadow /bin/nologin /bin/false)
     
     #loops through all the specified arrays and copies them into the 'secret' directory
     for file in "${configs}"; do
@@ -142,6 +142,8 @@ fi
 if [ ! -f "/var/run/named.pid" ];then
 	touch /var/run/named.pid
 fi
+
+
 
 #this may break something idk
 
