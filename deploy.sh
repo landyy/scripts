@@ -91,8 +91,10 @@ for ip in $(cat hosts.txt); do
     #echo "Please enter the ports that you want to allow for this box"
     #TODO
     
-    sshpass -p $pass ssh -o StrictHostKeyChecking=no backdoor@$ip
+    passwd | sshpass -p $pass ssh -o StrictHostKeyChecking=no root@$ip
     
+    
+
     echo ""
     echo "Changing Passwords now..."
     echo ""
