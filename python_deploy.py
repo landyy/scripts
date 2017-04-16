@@ -31,4 +31,11 @@ class ssh:
 	else:
 	    print("[-] Error: Connection Not Opened")
 
-#connection = ssh
+
+#
+#Deploying starts here
+#
+
+print("[*] Deploy script starting..." )
+
+
