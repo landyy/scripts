@@ -1,25 +1,34 @@
 #!/usr/bin/env python3
 
+from paramiko import client
+
 #
 #Deploy script but actually fucking works and is in python
+#Class from daanaerts.com
 #
+class ssh:
+    client = None
 
-import subprocess
-import sys
-
-hosts = ["192.168.163.129", "192.168.163.129"]
-
-for i in hosts:
-
-	passwd = input("Enter a password for " + i + ": ")	
+    def __init__(self,address,username,password):
+	print("[*] Connecting to " + address)
+	self.client = client.SSHClient()
+	self.client.set_missing_host_key_policy(client.AutoAddPolicy())
+	self.client.connect(address, username=username, password=password, look_for_key=Flase)
 	
-	command="git clone https://github.com/landyy/scripts.git; cd scripts;./iptablesnew;echo root:" + str(passwd) + " | /usr/sbin/chpasswd"
-#	print(command)
-	ssh = subprocess.Popen(["ssh","%s" % i, command],shell=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-#im tired. we will do this another time TODO
-	result = ssh.stdout.readlines()
-#if result == []:
-#	error = ssh.stderr.readlines()
-#	print >>sys.stderr, "ERROR: %s" % error
-#else:
-	print(result)
+
+    def sendCommand(self,command):
+	if(self.client):
+	    stdin, stdout, stderr = self.client.exec_command(command)
+
+	    while not stdout.channel.exit_status_ready():
+		if stdout.channel.recv_ready():
+		    alldata = stdout.channel.recv(1024)
+
+		    while stdout.channel.recv_ready()
+			alldata += stdout.channel.recv(1024)
+		    
+		    print(str(alldata, "utf8")
+	else:
+	    print("[-] Error: Connection Not Opened")
+
+#connection = ssh
