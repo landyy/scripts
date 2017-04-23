@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 from paramiko import client
-import random
-import string
 
 #
 #Deploy script but actually fucking works and is in python
@@ -39,21 +37,27 @@ class ssh:
 #
 
 print("[*] Deploy script starting..." )
-thefile = input("[*] Enter a file with IP addresses: (hosts.txt) ") or "hosts.txt"
+thefile = input("[*] Enter a file with IP addresses: (hosts.txt) ")
 
-randpass = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
-
+#default value
+if(thefile == ""):
+    thefile == "hosts.txt"
 
 fd = open(thefile,'r')
 
 for line in fd:
+    
+    theuser = input("[*] Enter a user to connect to %s: (root) " % line)
+    
+    #default value
+    if(theuser == ""):
+	theuser == "root"
 
-    theuser = input("[*] Enter a user to connect to %s: (root) " % line.replace('\n','')) or "root"
-    theport = input("[*] Enter the port ssh is listening on: (22) ") or 22
-    thepassword = input("[*] Enter the password for %s: (changeme) " % theuser) or "changeme"
-    thenewpass = input("[*] Enter a new password for '{0}': ('{1}')".format(line.replace('\n',''),randpass )) or randpass
-    connection = ssh(line,int(theport),theuser,thepassword)
-    #connection.sendCommand("mkdir testssh;")
-    #connection.sendCommand("touch childern")
+    
+    print(theuser)
+    print(thefile)
+    print(line)
+    #connection = ssh(line,3434,theuser,"Russell3434")
+    #connection.sendCommand("mkdir testssh; exit;")
 
 print("[+] Done")
