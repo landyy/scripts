@@ -29,15 +29,15 @@ systemctl stop <shitty service here>
 
 ```
 
-/var/logs/syslog <-- Provides information about services
+/var/log/syslog <-- Provides information about services
 
-/var/logs/auth.log <-- Provides good information about potential logons
+/var/log/auth.log <-- Provides good information about potential logons
 
-/var/logs/<service> <-- Provides good information about a service
+/var/log/<service> <-- Provides good information about a service
 
-/var/logs/kern.log <-- Provides good info on kernel information (may be useful)
+/var/log/kern.log <-- Provides good info on kernel information (may be useful)
 
-/var/logs/messages <-- Provides good info on basic on system info
+/var/log/messages <-- Provides good info on basic on system info
 
 ```
 
