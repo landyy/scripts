@@ -7,7 +7,7 @@ First thing is first, two scripts: iptablesnew.sh and harden.sh
 - harden.sh will do some basic auditing (checks sshd_config, vsftpd.conf, etc.)
 
 
-###First time on Box
+### First time on Box
 
 ```
 /usr/bin/passwd
@@ -53,6 +53,26 @@ journalctl _PID=<PID> <-- displays journal entries for specific PID
 
 ```
 
+### Searching logs
+
+awk quick tips
+```
+
+awk '{print $1}' file.txt <-- print first column
+awk -F <-- change delimiter
+
+```
+
+sed quick tips
+```
+
+sed 's/before/after/' file.txt <-- replaces before string with after string 
+
+```
+
+```
+uniq -c <-- prints only one version of text with the count beside it
+```
 
 ### Basic Commands
 
