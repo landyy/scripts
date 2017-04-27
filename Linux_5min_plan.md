@@ -23,6 +23,18 @@ iptables...
 systemctl stop <shitty service here>
 
 ```
+### Looking for shitty services
+We should only have the services we absolutely need runnning
+```
+systemctl list-units <-- list all units
+systemctl list-units | grep running | grep .services <-- list all the running services
+```
+
+We could also see upstart
+```
+service --status-all <--list all services
+service --status-all | grep + <-- list all services that are active
+```
 
 ### Logs
 "Logs are a good place to go if you need something to do" - knif3
@@ -74,15 +86,19 @@ sed 's/before/after/' file.txt <-- replaces before string with after string
 uniq -c <-- prints only one version of text with the count beside it
 ```
 
-### Basic Commands
+### Exploring Processes
+List all the processes
+```
+ps -aux | more
+pstree <-- format is a tree with branches xD
+```
+Find cause of a process spawning
+```
+/proc/PID <-- lists features of a PID
+```
 
-Check all processes 
-``` 
-ps -aux 
-```
-Check all connections with PID
-```
-netstat -tulpan
+### Basic Commands I left out
+
 ```
 Show the exports that have been made
 ```
