@@ -99,7 +99,6 @@ Find cause of a process spawning
 
 ### Basic Commands I left out
 
-```
 Show the exports that have been made
 ```
 declare -f [command]
